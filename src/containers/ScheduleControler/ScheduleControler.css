@@ -1,0 +1,23 @@
+.ScheduleControler{
+  
+}
+
+.ScheduleControler table{
+    margin: 100px auto;
+    border: 1px solid;
+    border-spacing: 0;
+    border-collapse: collapse;
+    
+}
+
+.ScheduleControler table th{
+    height: 25px;
+    border: 1px solid;
+    padding: 8px 15px;
+}
+
+.ScheduleControler table td{
+    height: 25px;
+    border: 1px solid;
+    padding: 7px;
+}
