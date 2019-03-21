@@ -70,7 +70,7 @@ export const editEmployee = (id, data) => {
         const address = `https://humanity-schedule.firebaseio.com/employees/${id}.json`;
         axios.put(`${proxy}${address}`, data)
         .then(res => {
-           console.log(res);
+            dispatch(getEmployees());
         })
         .catch(error => {
             console.log(error);

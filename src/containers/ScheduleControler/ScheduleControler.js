@@ -15,11 +15,13 @@ class ScheduleControler extends Component {
     state = {
         showDaysOfWeek: [],
         editingEmployee: false,
-        firstName: "",
-        lastName: "",
-        avatarUrl: "",
-        position: "",
-        employeeId: null,
+        employee: {
+            employeeId: null,
+            firstName: "",
+            lastName: "",
+            avatarUrl: "",
+            position: ""
+        },
         isNewEmployee: false
     }
 
@@ -45,8 +47,6 @@ class ScheduleControler extends Component {
     }
 
     deleteEmployeeHandler = (id) => {
-        console.log("delete employeer");
-        console.log(id);
         this.props.onDeleteEmployee(id);
     }
 
@@ -55,18 +55,19 @@ class ScheduleControler extends Component {
     }
 
     cancelEditingEmployeeHandler = () => {
-        this.setState({editingEmployee: false})
+        const employee = {employeeId: null, firstName: "", lastName: "", avatarUrl: "", position: ""}
+        this.setState({editingEmployee: false, employee: employee})
     }
 
     textInputChangeHandler = (event) => {
         this.setState({
-            [event.target.name]: event.target.value
+            employee: {...this.state.employee, [event.target.name]: event.target.value}
         })
     }
 
     saveEmployeeHandler = (event) => {
         event.preventDefault();
-        const { firstName, lastName, avatarUrl, position, employeeId } = this.state;
+        const { firstName, lastName, avatarUrl, position, employeeId } = this.state.employee;
         const data = {
             firstName: firstName,
             lastName: lastName,
@@ -86,8 +87,15 @@ class ScheduleControler extends Component {
         this.setState({editingEmployee: false});
     }
 
-    editEmployeeHandler = (employee) => {
-        this.setState({editingEmployee: true, isNewEmployee: false, employeeId: employee.id, firstName: employee.firstName, lastName: employee.lastName, avatarUrl: employee.avatarUrl, position: employee.position});
+    editEmployeeHandler = (empl) => {
+        const employee = {
+            employeeId: empl.id, 
+            firstName: empl.firstName, 
+            lastName: empl.lastName, 
+            avatarUrl: empl.avatarUrl, 
+            position: empl.position
+        }
+        this.setState({editingEmployee: true, isNewEmployee: false, employee: employee});
     }
 
 
@@ -154,10 +162,10 @@ class ScheduleControler extends Component {
                     <FormInputEmployee 
                         onTextInputChange={this.textInputChangeHandler}
                         onSaveEmployee={this.saveEmployeeHandler}
-                        firstName={this.state.firstName}
-                        lastName={this.state.lastName}
-                        avatarUrl={this.state.avatarUrl}
-                        position={this.state.position}
+                        firstName={this.state.employee.firstName}
+                        lastName={this.state.employee.lastName}
+                        avatarUrl={this.state.employee.avatarUrl}
+                        position={this.state.employee.position}
                         />
                 </Modal>
             </div>
