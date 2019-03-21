@@ -5,6 +5,7 @@ import * as actions from '../../store/actions/index';
 
 import Employee from '../../components/Employee/Employee';
 import FormInputEmployee from '../../components/FormInputEmployee/FormInputEmployee';
+import ShiftInputForm from '../../components/ShiftInputForm/ShiftInputForm';
 import Modal from '../../components/UI/Modal/Modal';
 
 import classes from './ScheduleControler.css';
@@ -15,6 +16,7 @@ class ScheduleControler extends Component {
     state = {
         showDaysOfWeek: [],
         editingEmployee: false,
+        isNewEmployee: false,
         employee: {
             employeeId: null,
             firstName: "",
@@ -22,7 +24,14 @@ class ScheduleControler extends Component {
             avatarUrl: "",
             position: ""
         },
-        isNewEmployee: false
+        shift: {
+            name: "",
+            date: "",
+            dateLabel: "",
+            position: "",
+            employee: ""
+        },
+        editingShift: false
     }
 
     componentDidMount() {
@@ -51,17 +60,17 @@ class ScheduleControler extends Component {
     }
 
     newEmployeeHandler = () => {
-        this.setState({editingEmployee: true, isNewEmployee: true});
+        this.setState({ editingEmployee: true, isNewEmployee: true });
     }
 
     cancelEditingEmployeeHandler = () => {
-        const employee = {employeeId: null, firstName: "", lastName: "", avatarUrl: "", position: ""}
-        this.setState({editingEmployee: false, employee: employee})
+        const employee = { employeeId: null, firstName: "", lastName: "", avatarUrl: "", position: "" }
+        this.setState({ editingEmployee: false, employee: employee })
     }
 
     textInputChangeHandler = (event) => {
         this.setState({
-            employee: {...this.state.employee, [event.target.name]: event.target.value}
+            employee: { ...this.state.employee, [event.target.name]: event.target.value }
         })
     }
 
@@ -75,38 +84,58 @@ class ScheduleControler extends Component {
             position: position,
         }
         console.log(data);
-        if(this.state.isNewEmployee){
+        if (this.state.isNewEmployee) {
             this.props.onAddEmployee(data);
-        }else{
+        } else {
             this.props.onEditEmployee(employeeId, data);
-        } 
+        }
         event.target.firstName.value = "";
         event.target.lastName.value = "";
         event.target.avatarUrl.value = "";
-        event.target.position.value="";
-        this.setState({editingEmployee: false});
+        event.target.position.value = "";
+        this.setState({ editingEmployee: false });
     }
 
     editEmployeeHandler = (empl) => {
         const employee = {
-            employeeId: empl.id, 
-            firstName: empl.firstName, 
-            lastName: empl.lastName, 
-            avatarUrl: empl.avatarUrl, 
+            employeeId: empl.id,
+            firstName: empl.firstName,
+            lastName: empl.lastName,
+            avatarUrl: empl.avatarUrl,
             position: empl.position
         }
-        this.setState({editingEmployee: true, isNewEmployee: false, employee: employee});
+        this.setState({ editingEmployee: true, isNewEmployee: false, employee: employee });
     }
 
+    createShift = (event) => {
+        const date = event.target.getAttribute('data-date');
+        const id = event.target.getAttribute('data-user');
+        const dateLabel = event.target.getAttribute('date-label');
+        const employee = this.props.employees.find(el => {
+            return el.id === id;
+        });
+        console.log(employee);
+        const shift = {
+            name: "Shift Name",
+            date: date,
+            dateLabel: dateLabel,
+            position: employee.position,
+            employee: employee
+        }
+        this.setState({ editingShift: true, shift: shift})
+    }
+
+    cancelEditingShiftHandler = () => {
+        this.setState({ editingShift: false });
+    }
 
     render() {
 
         let tableHeder = [];
 
         if (this.state.showDaysOfWeek.length > 0) {
-            let iterator = 1;
             tableHeder = this.state.showDaysOfWeek.map(el => {
-                return (<th key={iterator++} >{el.label}</th>);
+                return (<th key={el.date} >{el.label}</th>);
             });
             tableHeder.unshift((<th key="0">{`${this.state.showDaysOfWeek[0].label} - ${this.state.showDaysOfWeek[6].label}`}</th>))
         }
@@ -116,6 +145,16 @@ class ScheduleControler extends Component {
         if (this.props.employees.length > 0) {
             employeesTableRows = this.props.employees.map(el => {
                 const id = el.id;
+                let rowCells = [];
+                for(let i=0; i<=6; i++){
+                    rowCells.push((
+                    <td key={`a${i}`}
+                        data-user={id} 
+                        data-date={this.state.showDaysOfWeek[i].date}
+                        date-label={this.state.showDaysOfWeek[i].label} 
+                        onClick={this.createShift}>
+                    </td>));
+                }
                 return (
                     <tr key={id}>
                         <td><Employee
@@ -126,13 +165,7 @@ class ScheduleControler extends Component {
                             onDeleteEmployee={() => this.deleteEmployeeHandler(id)}
                             onEditEmployee={() => this.editEmployeeHandler(el)}
                         /></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        {rowCells}
                     </tr>
                 );
             });
@@ -159,14 +192,22 @@ class ScheduleControler extends Component {
                     </tbody>
                 </table>
                 <Modal show={this.state.editingEmployee} modalClosed={this.cancelEditingEmployeeHandler}>
-                    <FormInputEmployee 
+                    <FormInputEmployee
                         onTextInputChange={this.textInputChangeHandler}
                         onSaveEmployee={this.saveEmployeeHandler}
                         firstName={this.state.employee.firstName}
                         lastName={this.state.employee.lastName}
                         avatarUrl={this.state.employee.avatarUrl}
                         position={this.state.employee.position}
-                        />
+                    />
+                </Modal>
+                <Modal show={this.state.editingShift} modalClosed={this.cancelEditingShiftHandler}>
+                    <ShiftInputForm
+                        onTextInputChange={this.textInputChangeHandler}
+                        onSaveShift={this.saveShiftHandler}
+                        dateLabel={this.state.shift.dateLabel}
+                        employeeName={this.state.shift.employee.firstName}
+                    />
                 </Modal>
             </div>
         )

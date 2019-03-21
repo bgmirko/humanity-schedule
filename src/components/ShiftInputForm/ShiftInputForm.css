@@ -1,0 +1,37 @@
+.ShiftInputForm{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    margin: 0 auto;
+    padding: 50px;
+}
+
+.ShiftInputForm input{
+    display: block;
+    margin: 0 auto;
+    height: 35px;
+    width: 250px; 
+    padding-left: 10px;
+    margin-bottom: 15px;
+}
+
+.ShiftInputForm label{
+    display: block;
+    margin-bottom: 15px;
+}
+
+.ShiftInputForm button{
+    display: block;
+    margin: 0 auto; 
+    height: 40px;
+    width: 130px;
+    border-radius: 15px; 
+    margin-top: 25px;
+    background-color: #2f952f;
+    color: white;
+}
+
+.ShiftInputForm button:hover{
+    background-color: #237a23;
+    box-shadow: 1px 3px 4px rgb(172, 172, 172);
+}
