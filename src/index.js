@@ -7,13 +7,15 @@ import thunk from 'redux-thunk';
 import './index.css';
 import App from './App';
 import employeesReducer from './store/reducers/employees';
+import shiftsReducer from './store/reducers/shifts';
 
 import * as serviceWorker from './serviceWorker';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const rootReducer = combineReducers({
-    employees: employeesReducer
+    employees: employeesReducer,
+    shifts: shiftsReducer
 })
 
 const store = createStore(rootReducer, composeEnhancers(

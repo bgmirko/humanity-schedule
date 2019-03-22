@@ -5,3 +5,8 @@ export {
     deleteEmployee,
     editEmployee
 } from './employees';
+export {
+    saveShift,
+    getShifts,
+    saveShifts
+} from './shifts';

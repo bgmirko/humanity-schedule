@@ -4,8 +4,6 @@ import classes from './ShiftInputForm.css';
 
 const ShiftInputEmployee = (props) => {
 
-        console.log(props.employeeName);
-
         return (
             <div className={classes.ShiftInputForm}>
                 <form onSubmit={props.onSaveShift}>
@@ -20,9 +18,10 @@ const ShiftInputEmployee = (props) => {
                         type="text"
                         placeholder="8:00am : 4:00pm"
                         name="time"
+                        value="8:00am : 4:00pm"
                         onChange={props.onTextInputChange}>
                     </input>
-                    <label>{props.employeeName}</label>
+                    <label>{`${props.employee.firstName} ${props.employee.lastName}`}</label>
                     <button type="submit">Save Shift</button>
                 </form>
             </div>

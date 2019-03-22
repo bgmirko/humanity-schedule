@@ -29,8 +29,9 @@ class ScheduleControler extends Component {
             date: "",
             dateLabel: "",
             position: "",
-            employee: ""
+            employee: {}
         },
+        shifts: [],
         editingShift: false
     }
 
@@ -52,6 +53,7 @@ class ScheduleControler extends Component {
             daysInWeek.push(day);
         }
         this.props.onGetEmployees();
+        this.props.onGetShifts();
         this.setState({ showDaysOfWeek: [...daysInWeek] })
     }
 
@@ -123,6 +125,36 @@ class ScheduleControler extends Component {
             employee: employee
         }
         this.setState({ editingShift: true, shift: shift})
+    }
+
+    textShiftInputChangeHandler = (event) => {
+        this.setState({
+            shift: { ...this.state.shift, [event.target.name]: event.target.value }
+        })
+    }
+
+    saveShiftHandler = (event) => {
+        event.preventDefault();
+        const { name, date, dateLabel, position, employee } = this.state.shift;
+        const data = {
+            name: name,
+            date: date,
+            dateLabel: dateLabel,
+            position: position,
+            employee: employee
+        }
+        console.log(data);
+        this.props.onSaveShift(data);
+        // if (this.state.isNewEmployee) {
+        //     this.props.onAddEmployee(data);
+        // } else {
+        //     this.props.onEditEmployee(employeeId, data);
+        // }
+        // event.target.firstName.value = "";
+        // event.target.lastName.value = "";
+        // event.target.avatarUrl.value = "";
+        // event.target.position.value = "";
+        this.setState({ editingShift: false });
     }
 
     cancelEditingShiftHandler = () => {
@@ -203,10 +235,10 @@ class ScheduleControler extends Component {
                 </Modal>
                 <Modal show={this.state.editingShift} modalClosed={this.cancelEditingShiftHandler}>
                     <ShiftInputForm
-                        onTextInputChange={this.textInputChangeHandler}
+                        onTextInputChange={this.textShiftInputChangeHandler}
                         onSaveShift={this.saveShiftHandler}
                         dateLabel={this.state.shift.dateLabel}
-                        employeeName={this.state.shift.employee.firstName}
+                        employee={this.state.shift.employee}
                     />
                 </Modal>
             </div>
@@ -225,7 +257,9 @@ const mapDispatchToProps = dispatch => {
         onGetEmployees: () => dispatch(actions.getEmployees()),
         onDeleteEmployee: (id) => dispatch(actions.deleteEmployee(id)),
         onAddEmployee: (data) => dispatch(actions.addEmployee(data)),
-        onEditEmployee: (id, data) => dispatch(actions.editEmployee(id, data))
+        onEditEmployee: (id, data) => dispatch(actions.editEmployee(id, data)),
+        onSaveShift: (data) => dispatch(actions.saveShift(data)),
+        onGetShifts: () => dispatch(actions.getShifts())
     };
 };
 

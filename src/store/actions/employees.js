@@ -34,7 +34,6 @@ export const getEmployees = () => {
                         id: key
                     });
                 }
-                console.log(fetchEmployees);
                 dispatch(setEmployees(fetchEmployees))
             })
             .catch(error => {
@@ -78,24 +77,4 @@ export const editEmployee = (id, data) => {
     }
 }
 
-// export const getOneEmployee = (id) => {
-//     return dispatch => {
-//         const proxy = 'https://cors-anywhere.herokuapp.com/';
-//         const address = `https://humanity-schedule.firebaseio.com/employees/${id}.json`;
-//         axios.get(`${proxy}${address}`)
-//         .then(res => {
-//            console.log(res);
-//            dispatch(editingEmployee(res.data));
-//         })
-//         .catch(error => {
-//             console.log(error);
-//         })
-//     }
-// }
 
-// export const editingEmployee = (employee) => {
-//     return{
-//         type: actionTypes.EDITING_EMPLOYEE,
-//         employee: employee
-//     }
-// }
