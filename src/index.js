@@ -8,6 +8,7 @@ import './index.css';
 import App from './App';
 import employeesReducer from './store/reducers/employees';
 import shiftsReducer from './store/reducers/shifts';
+import calendarReducer from './store/reducers/calendar';
 
 import * as serviceWorker from './serviceWorker';
 
@@ -15,7 +16,8 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const rootReducer = combineReducers({
     employees: employeesReducer,
-    shifts: shiftsReducer
+    shifts: shiftsReducer,
+    calendar: calendarReducer
 })
 
 const store = createStore(rootReducer, composeEnhancers(

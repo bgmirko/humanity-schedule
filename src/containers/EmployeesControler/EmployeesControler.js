@@ -40,7 +40,7 @@ class EmployeesControler extends Component {
         }
         if (this.props.employeesOperation === "new") {
             this.props.onAddEmployee(data);
-        } else if (this.props.employeesOperation === "editing") {
+        } else if (this.props.employeesOperation === "edit") {
             this.props.onEditEmployee(employeeId, data);
         }
         const employee = { employeeId: null, firstName: "", lastName: "", avatarUrl: "", position: "" }

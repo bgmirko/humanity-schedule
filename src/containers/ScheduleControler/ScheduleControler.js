@@ -6,6 +6,7 @@ import * as actions from '../../store/actions/index';
 import Employee from '../../components/Employee/Employee';
 import Modal from '../../components/UI/Modal/Modal';
 import Td from '../../components/UI/Td/Td';
+import TableHeaderCalendar from '../../components/TableHeaderCalendar/TableHeaderCalendar';
 import ShiftsControler from '../ShiftsControler/ShiftsControler';
 import EmployeesControler from '../EmployeesControler/EmployeesControler';
 
@@ -15,7 +16,7 @@ import classes from './ScheduleControler.css';
 class ScheduleControler extends Component {
 
     state = {
-        showDaysOfWeek: [],
+        // daysInWeek: [],
         shift: {
             shiftName: "",
             date: "",
@@ -23,31 +24,14 @@ class ScheduleControler extends Component {
             dateLabel: "",
             employees: []
         },
-        shiftsOperation: "no", // no, editing, creating
+        shiftsOperation: "no", // no, edit, create
         employeesOperation: "no", // no, new, edit
         modalIsOpen: false
     }
 
     componentDidMount() {
-        let daysInWeek = [];
-        const todayNumber = new Date().getDay();
-
-        const weekday = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-        const monthName = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUNE', 'JULY', 'AUG', 'SEPT', 'OCT', 'NOV', 'DEC'];
-
-        for (let i = 0; i <= 6; i++) {
-            const today = new Date();
-            const date = new Date(today.setDate(today.getDate() - todayNumber + i));
-            const dateLabel = `${weekday[date.getDay()]}, ${monthName[date.getMonth()]} ${date.getDate()}`;
-            const day = {
-                date: date,
-                label: dateLabel
-            }
-            daysInWeek.push(day);
-        }
         this.props.onGetEmployees();
         this.props.onGetShifts();
-        this.setState({ showDaysOfWeek: [...daysInWeek] })
     }
 
     newEmployeeHandler = () => {
@@ -64,45 +48,40 @@ class ScheduleControler extends Component {
 
     editEmployeeHandler = (empl) => {
         this.refs.employeesControler.editEmployeeHandler(empl);
-        this.setState({ employeesOperation: "editing" });
+        this.setState({ employeesOperation: "edit" });
     }
 
     createShift = (userId, date, dateLabel) => {
         const employee = this.props.employees.find(el => el.id === userId);
         const shift = { date: date, dateLabel: dateLabel, employees: [employee] }
-        this.setState({ shiftsOperation: "creating", shift: shift });
+        this.setState({ shiftsOperation: "create", shift: shift });
     }
 
     editShift = (shift) => {
-        this.setState({ shiftsOperation: "editing", modalIsOpen: true, shift: shift })
+        this.setState({ shiftsOperation: "edit", modalIsOpen: true, shift: shift })
     }
 
     cancelEditingShiftHandler = () => {
         this.setState({ shiftsOperation: "no", modalIsOpen: false });
     }
 
+    switchDates = (direction) => {
+        this.refs.tableHeaderCalendar.switchDates(direction);
+    }
+
     render() {
 
-        let tableHeder = [];
-
-        if (this.state.showDaysOfWeek.length > 0) {
-            tableHeder = this.state.showDaysOfWeek.map(el => {
-                return (<th key={el.date} >{el.label}</th>);
-            });
-            tableHeder.unshift((<th key="0">{`${this.state.showDaysOfWeek[0].label} - ${this.state.showDaysOfWeek[6].label}`}</th>))
-        }
-
         let employeesTableRows = [];
-        if (this.props.employees.length > 0) {
+        if (this.props.employees.length > 0 && this.props.daysInWeek.length > 0) {
             employeesTableRows = this.props.employees.map(el => {
                 const id = el.id;
                 let rowCells = [];
                 for (let i = 0; i <= 6; i++) {
-                    const dataLabel = this.state.showDaysOfWeek[i].label;
+                    const dataLabel = this.props.daysInWeek[i].label;
                     rowCells.push((
                         <Td key={`${i}${id}`}
                             userId={id}
-                            date={this.state.showDaysOfWeek[i].date}
+                            date={this.props.daysInWeek[i].date}
                             dateLabel={dataLabel}
                             shift={this.props.shifts.find(el => (el.dateLabel === dataLabel
                                 && el.employees.find(employee => { return employee.id === id })))}
@@ -130,10 +109,17 @@ class ScheduleControler extends Component {
 
         return (
             <div className={classes.ScheduleControler}>
+                <div className={classes.Date_Buttons_Container}>
+                    <button onClick={() => this.switchDates('backward')}
+                            disabled = {this.props.disableBackwardButton}>&#60;</button>
+                    <button onClick={() => this.switchDates('forward')}>&#62;</button>
+                </div>
                 <table>
                     <tbody>
                         <tr>
-                            {tableHeder}
+                            <TableHeaderCalendar
+                                ref="tableHeaderCalendar" 
+                            />
                         </tr>
                         {employeesTableRows}
                         <tr>
@@ -174,7 +160,9 @@ class ScheduleControler extends Component {
 const mapStateToProps = state => {
     return {
         employees: state.employees.employees,
-        shifts: state.shifts.shifts
+        shifts: state.shifts.shifts,
+        daysInWeek: state.calendar.daysInWeek,
+        disableBackwardButton: state.calendar.disableBackwardButton
     };
 };
 

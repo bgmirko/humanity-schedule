@@ -12,3 +12,6 @@ export {
     editShift,
     deleteShift
 } from './shifts';
+export {
+    storeDates
+} from './calendar';

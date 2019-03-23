@@ -1,9 +1,9 @@
 .ScheduleControler{
-  
+    padding-top: 100px;
 }
 
 .ScheduleControler table{
-    margin: 100px auto;
+    margin: 0 auto;
     border: 1px solid;
     border-spacing: 0;
     border-collapse: collapse;
@@ -21,3 +21,23 @@
     border: 1px solid;
     padding: 7px;
 }
+
+.Date_Buttons_Container{
+    display: flex;
+    justify-content: space-between;
+    width: 200px;
+    margin: 0 auto 10px auto;
+}
+
+.Date_Buttons_Container button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    width: 70px;
+    border-radius: 7px;
+    font-size: 25px;
+    padding-bottom: 5px;
+    color: red;
+}
+
