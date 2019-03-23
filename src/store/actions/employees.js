@@ -12,7 +12,6 @@ export const addEmployee = (data) => {
             data: data
         })
             .then(result => {
-                console.log(result);
                 dispatch(getEmployees());
             })
             .catch(error => {

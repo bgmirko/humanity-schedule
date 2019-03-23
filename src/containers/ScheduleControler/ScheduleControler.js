@@ -4,11 +4,10 @@ import { connect } from 'react-redux';
 import * as actions from '../../store/actions/index';
 
 import Employee from '../../components/Employee/Employee';
-import FormInputEmployee from '../../components/FormInputEmployee/FormInputEmployee';
-import ShiftInputForm from '../../components/ShiftInputForm/ShiftInputForm';
 import Modal from '../../components/UI/Modal/Modal';
 import Td from '../../components/UI/Td/Td';
 import ShiftsControler from '../ShiftsControler/ShiftsControler';
+import EmployeesControler from '../EmployeesControler/EmployeesControler';
 
 import classes from './ScheduleControler.css';
 
@@ -17,27 +16,16 @@ class ScheduleControler extends Component {
 
     state = {
         showDaysOfWeek: [],
-        editingEmployee: false,
-        isNewEmployee: false,
-        employee: {
-            employeeId: null,
-            firstName: "",
-            lastName: "",
-            avatarUrl: "",
-            position: ""
-        },
         shift: {
             shiftName: "",
             date: "",
             time: "",
             dateLabel: "",
-            // position: "",
             employees: []
         },
         shiftsOperation: "no", // no, editing, creating
+        employeesOperation: "no", // no, new, edit
         modalIsOpen: false
-        // creatingShift: false,
-        // editingShift: false
     }
 
     componentDidMount() {
@@ -62,100 +50,31 @@ class ScheduleControler extends Component {
         this.setState({ showDaysOfWeek: [...daysInWeek] })
     }
 
-    deleteEmployeeHandler = (id) => {
-        this.props.onDeleteEmployee(id);
-    }
-
     newEmployeeHandler = () => {
-        this.setState({ editingEmployee: true, isNewEmployee: true });
+        this.setState({ employeesOperation: "new", modalIsOpen: true });
     }
 
-    cancelEditingEmployeeHandler = () => {
-        const employee = { employeeId: null, firstName: "", lastName: "", avatarUrl: "", position: "" }
-        this.setState({ editingEmployee: false, employee: employee })
+    cancelEditingEmployeesHandler = () => {
+        this.setState({ employeesOperation: "no", modalIsOpen: false})
     }
 
-    textInputChangeHandler = (event) => {  
-        this.setState({
-            employee: { ...this.state.employee, [event.target.name]: event.target.value }
-        })
-    }
-
-    saveEmployeeHandler = (event) => {
-        event.preventDefault();
-        const { firstName, lastName, avatarUrl, employeeId } = this.state.employee;
-        const data = {
-            firstName: firstName,
-            lastName: lastName,
-            avatarUrl: avatarUrl,
-            position: event.target.position.value,
-        }
-        if (this.state.isNewEmployee) {
-            this.props.onAddEmployee(data);
-        } else {
-            this.props.onEditEmployee(employeeId, data);
-        }
-        const employee = {employeeId: null, firstName: "", lastName: "", avatarUrl: "", position: ""}
-        event.target.jobPosition.value = "intro";
-        this.setState({ editingEmployee: false, employee: employee });
+    deleteEmployeeHandler = (id) => {
+        this.refs.employeesControler.deleteEmployeeHandler(id);
     }
 
     editEmployeeHandler = (empl) => {
-        const employee = {
-            employeeId: empl.id,
-            firstName: empl.firstName,
-            lastName: empl.lastName,
-            avatarUrl: empl.avatarUrl,
-            position: empl.position
-        }
-        this.setState({ editingEmployee: true, isNewEmployee: false, employee: employee });
+        this.refs.employeesControler.editEmployeeHandler(empl);
+        this.setState({ employeesOperation: "editing" });
     }
-
-
-
-    // textShiftInputChangeHandler = (event) => {
-    //     this.setState({
-    //         shift: { ...this.state.shift, [event.target.name]: event.target.value }
-    //     })
-    // }
-
-    // saveShiftHandler = (event) => {
-    //     event.preventDefault();
-    //     const { date, dateLabel, position, employees } = this.state.shift;
-    //     const data = {
-    //         shiftName: event.target.shiftName.value,
-    //         date: date,
-    //         dateLabel: dateLabel,
-    //         time: event.target.time.value,
-    //         position: position,
-    //         employees: employees
-    //     }
-    //     this.props.onSaveShift(data);
-
-    //     // if (this.state.isNewEmployee) {
-    //     //     this.props.onAddEmployee(data);
-    //     // } else {
-    //     //     this.props.onEditEmployee(employeeId, data);
-    //     // }
-    //     // event.target.firstName.value = "";
-    //     // event.target.lastName.value = "";
-    //     // event.target.avatarUrl.value = "";
-    //     // event.target.position.value = "";
-    //     this.setState({ creatingShift: false});
-    // }
-
-    // cancelCreatingShiftHandler = () => {
-    //     this.setState({ creatingShift: false });
-    // }
 
     createShift = (userId, date, dateLabel) => {
         const employee = this.props.employees.find(el => el.id === userId);
-        const shift = {date: date, dateLabel: dateLabel, employees: [employee]}
-        this.setState({ shiftsOperation: "creating", shift: shift});
+        const shift = { date: date, dateLabel: dateLabel, employees: [employee] }
+        this.setState({ shiftsOperation: "creating", shift: shift });
     }
 
     editShift = (shift) => {
-        this.setState({ shiftsOperation: "editing" , modalIsOpen: true, shift: shift})
+        this.setState({ shiftsOperation: "editing", modalIsOpen: true, shift: shift })
     }
 
     cancelEditingShiftHandler = () => {
@@ -178,15 +97,15 @@ class ScheduleControler extends Component {
             employeesTableRows = this.props.employees.map(el => {
                 const id = el.id;
                 let rowCells = [];
-                for(let i=0; i<=6; i++){
+                for (let i = 0; i <= 6; i++) {
                     const dataLabel = this.state.showDaysOfWeek[i].label;
                     rowCells.push((
                         <Td key={`${i}${id}`}
                             userId={id}
                             date={this.state.showDaysOfWeek[i].date}
                             dateLabel={dataLabel}
-                            shift={this.props.shifts.find(el => (el.dateLabel === dataLabel 
-                                  && el.employees.find(employee => {return employee.id === id })))}
+                            shift={this.props.shifts.find(el => (el.dateLabel === dataLabel
+                                && el.employees.find(employee => { return employee.id === id })))}
                             employeeId={id}
                             click={(userId, date, dateLabel) => this.createShift(userId, date, dateLabel)}
                             editShift={(shift) => this.editShift(shift)}>
@@ -229,31 +148,22 @@ class ScheduleControler extends Component {
                         </tr>
                     </tbody>
                 </table>
-                <Modal show={this.state.editingEmployee} modalClosed={this.cancelEditingEmployeeHandler}>
-                    <FormInputEmployee
-                        onTextInputChange={this.textInputChangeHandler}
-                        onSaveEmployee={this.saveEmployeeHandler}
-                        firstName={this.state.employee.firstName}
-                        lastName={this.state.employee.lastName}
-                        avatarUrl={this.state.employee.avatarUrl}
-                        position={this.state.employee.position}
+                <Modal show={this.state.employeesOperation !== "no"} modalClosed={this.cancelEditingEmployeesHandler}>
+                    <EmployeesControler 
+                        ref="employeesControler"
+                        employeesOperation={this.state.employeesOperation}
+                        modalIsOpen={this.state.modalIsOpen}
+                        closeDialog={this.cancelEditingEmployeesHandler}
                     />
                 </Modal>
-                {/* <Modal show={this.state.creatingShift} modalClosed={this.cancelCreatingShiftHandler}>
-                    <ShiftInputForm
-                        onTextInputChange={this.textShiftInputChangeHandler}
-                        onSaveShift={this.saveShiftHandler}
-                        dateLabel={this.state.shift.dateLabel}
-                        employees={this.state.shift.employees}
-                    />
-                </Modal> */}
                 <Modal show={this.state.shiftsOperation !== "no"} modalClosed={this.cancelEditingShiftHandler}>
                     <ShiftsControler
+                        shiftsOperation={this.state.shiftsOperation}
                         shift={this.state.shift}
                         employees={this.props.employees} // this is all employees not only employees in that shift
                         modalIsOpen={this.state.modalIsOpen}
                         closeDialog={this.cancelEditingShiftHandler}
-                        shiftsOperation={this.state.shiftsOperation}
+
                     />
                 </Modal>
             </div>
@@ -271,10 +181,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         onGetEmployees: () => dispatch(actions.getEmployees()),
-        onDeleteEmployee: (id) => dispatch(actions.deleteEmployee(id)),
-        onAddEmployee: (data) => dispatch(actions.addEmployee(data)),
-        onEditEmployee: (id, data) => dispatch(actions.editEmployee(id, data)),
-        // onSaveShift: (data) => dispatch(actions.saveShift(data)),
         onGetShifts: () => dispatch(actions.getShifts())
     };
 };

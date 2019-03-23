@@ -7,16 +7,20 @@ import classes from './FormInputEmployee.css';
 class FormInputEmployee extends Component{
 
     handleChange = (event) => {
-        console.log(event.target.value);
         this.inputPosition.value = event.target.value;
     }
 
     render(props) {
 
         const options = positions.map(el => { return (<option value={el.name} key={el.name}>{el.name}</option>) });
-        options.unshift((<option key="select" disabled hidden value="intro">Job Position</option>));
+        options.unshift((<option key="select" disabled hidden 
+                                value={this.props.position ? this.props.position : "intro"}>
+                                {this.props.position ? this.props.position : 'Job Position'}</option>));
 
-        // let valueOfSelected = "intro";
+        if(this.props.position && this.inputPosition.value === ""){
+            this.inputPosition.value = this.props.position;
+        }
+
 
         return (
             <div className={classes.FormInputEmployee}>
