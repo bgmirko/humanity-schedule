@@ -195,7 +195,8 @@ class ScheduleControler extends Component {
                             dateLabel={dataLabel}
                             shift={this.props.shifts.find(el => (el.dateLabel === dataLabel 
                                   && el.employees.find(employee => {return employee.id === id })))}
-                            click = {(userId, date, dateLabel) => this.createShift(userId, date, dateLabel)}
+                            employeeId={id}
+                            click={(userId, date, dateLabel) => this.createShift(userId, date, dateLabel)}
                             editShift={(shift) => this.editShift(shift)}>
                         </Td>
                     ));
