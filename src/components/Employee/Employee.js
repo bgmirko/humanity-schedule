@@ -8,7 +8,7 @@ const Employee = (props) => {
 
     return (
         <div className={classes.Employee}>
-            <img src={props.avatarUrl} />
+            <img src={props.avatarUrl} alt="" />
             <div>
                 <span>{`${props.firstName} ${props.lastName}`}</span>
                 <span>{props.position}</span>

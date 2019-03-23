@@ -13,7 +13,7 @@ const saveShifts = ( state, action ) => {
 
 const reducer = ( state = initialState, action) => {
     switch( action.type ){
-        case actionTypes.SAVE_SHIFTS: return saveShifts(state, action);
+        case actionTypes.STORE_SHIFTS: return saveShifts(state, action);
         default: return state;
     }
 }

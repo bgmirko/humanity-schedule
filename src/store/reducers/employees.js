@@ -1,5 +1,4 @@
 import * as actionTypes from '../actions/actionTypes';
-import { setEmployees } from '../actions';
 
 const initialState = {
     employees: []

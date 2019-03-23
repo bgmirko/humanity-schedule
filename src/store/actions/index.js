@@ -8,5 +8,6 @@ export {
 export {
     saveShift,
     getShifts,
-    saveShifts
+    storeShifts,
+    editShift
 } from './shifts';

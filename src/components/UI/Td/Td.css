@@ -1,0 +1,19 @@
+.Td{
+    padding: 3px;
+}
+
+.Add_New{
+    height: 50px;
+    text-align: center;
+}
+
+.Add_New:hover{
+    background-color: #e2e2e2;
+}
+
+.Add_New:hover:after {
+    content: "+";
+    line-height: 45px;
+    vertical-align: middle;
+}
+

@@ -7,6 +7,8 @@ import Employee from '../../components/Employee/Employee';
 import FormInputEmployee from '../../components/FormInputEmployee/FormInputEmployee';
 import ShiftInputForm from '../../components/ShiftInputForm/ShiftInputForm';
 import Modal from '../../components/UI/Modal/Modal';
+import Td from '../../components/UI/Td/Td';
+import EditShift from '../../components/EditShift/EditShift';
 
 import classes from './ScheduleControler.css';
 
@@ -25,13 +27,14 @@ class ScheduleControler extends Component {
             position: ""
         },
         shift: {
-            name: "",
+            shiftName: "",
             date: "",
+            time: "",
             dateLabel: "",
             position: "",
-            employee: {}
+            employees: []
         },
-        shifts: [],
+        creatingShift: false,
         editingShift: false
     }
 
@@ -70,7 +73,7 @@ class ScheduleControler extends Component {
         this.setState({ editingEmployee: false, employee: employee })
     }
 
-    textInputChangeHandler = (event) => {
+    textInputChangeHandler = (event) => {  
         this.setState({
             employee: { ...this.state.employee, [event.target.name]: event.target.value }
         })
@@ -78,24 +81,21 @@ class ScheduleControler extends Component {
 
     saveEmployeeHandler = (event) => {
         event.preventDefault();
-        const { firstName, lastName, avatarUrl, position, employeeId } = this.state.employee;
+        const { firstName, lastName, avatarUrl, employeeId } = this.state.employee;
         const data = {
             firstName: firstName,
             lastName: lastName,
             avatarUrl: avatarUrl,
-            position: position,
+            position: event.target.position.value,
         }
-        console.log(data);
         if (this.state.isNewEmployee) {
             this.props.onAddEmployee(data);
         } else {
             this.props.onEditEmployee(employeeId, data);
         }
-        event.target.firstName.value = "";
-        event.target.lastName.value = "";
-        event.target.avatarUrl.value = "";
-        event.target.position.value = "";
-        this.setState({ editingEmployee: false });
+        const employee = {employeeId: null, firstName: "", lastName: "", avatarUrl: "", position: ""}
+        event.target.jobPosition.value = "intro";
+        this.setState({ editingEmployee: false, employee: employee });
     }
 
     editEmployeeHandler = (empl) => {
@@ -109,22 +109,20 @@ class ScheduleControler extends Component {
         this.setState({ editingEmployee: true, isNewEmployee: false, employee: employee });
     }
 
-    createShift = (event) => {
-        const date = event.target.getAttribute('data-date');
-        const id = event.target.getAttribute('data-user');
-        const dateLabel = event.target.getAttribute('date-label');
+    createShift = (userId, date, dateLabel) => {
+        console.log(date);
         const employee = this.props.employees.find(el => {
-            return el.id === id;
+            return el.id === userId;
         });
-        console.log(employee);
         const shift = {
             name: "Shift Name",
             date: date,
+            time: "8:0pm - 4:0am",
             dateLabel: dateLabel,
             position: employee.position,
-            employee: employee
+            employees: [employee]
         }
-        this.setState({ editingShift: true, shift: shift})
+        this.setState({ creatingShift: true, shift: shift});
     }
 
     textShiftInputChangeHandler = (event) => {
@@ -135,16 +133,17 @@ class ScheduleControler extends Component {
 
     saveShiftHandler = (event) => {
         event.preventDefault();
-        const { name, date, dateLabel, position, employee } = this.state.shift;
+        const { date, dateLabel, position, employees } = this.state.shift;
         const data = {
-            name: name,
+            shiftName: event.target.shiftName.value,
             date: date,
             dateLabel: dateLabel,
+            time: event.target.time.value,
             position: position,
-            employee: employee
+            employees: employees
         }
-        console.log(data);
         this.props.onSaveShift(data);
+
         // if (this.state.isNewEmployee) {
         //     this.props.onAddEmployee(data);
         // } else {
@@ -154,7 +153,15 @@ class ScheduleControler extends Component {
         // event.target.lastName.value = "";
         // event.target.avatarUrl.value = "";
         // event.target.position.value = "";
-        this.setState({ editingShift: false });
+        this.setState({ creatingShift: false});
+    }
+
+    cancelCreatingShiftHandler = () => {
+        this.setState({ creatingShift: false });
+    }
+
+    editShift = (shift) => {
+        this.setState({ editingShift: true, shift: shift})
     }
 
     cancelEditingShiftHandler = () => {
@@ -172,20 +179,26 @@ class ScheduleControler extends Component {
             tableHeder.unshift((<th key="0">{`${this.state.showDaysOfWeek[0].label} - ${this.state.showDaysOfWeek[6].label}`}</th>))
         }
 
-        let employeesTableRows = [];
+  
 
+        let employeesTableRows = [];
         if (this.props.employees.length > 0) {
             employeesTableRows = this.props.employees.map(el => {
                 const id = el.id;
                 let rowCells = [];
                 for(let i=0; i<=6; i++){
+                    const dataLabel = this.state.showDaysOfWeek[i].label;
                     rowCells.push((
-                    <td key={`a${i}`}
-                        data-user={id} 
-                        data-date={this.state.showDaysOfWeek[i].date}
-                        date-label={this.state.showDaysOfWeek[i].label} 
-                        onClick={this.createShift}>
-                    </td>));
+                        <Td key={`${i}${id}`}
+                            userId={id}
+                            date={this.state.showDaysOfWeek[i].date}
+                            dateLabel={dataLabel}
+                            shift={this.props.shifts.find(el => (el.dateLabel === dataLabel 
+                                  && el.employees.find(employee => {return employee.id === id })))}
+                            click = {(userId, date, dateLabel) => this.createShift(userId, date, dateLabel)}
+                            editShift={(shift) => this.editShift(shift)}>
+                        </Td>
+                    ));
                 }
                 return (
                     <tr key={id}>
@@ -233,12 +246,20 @@ class ScheduleControler extends Component {
                         position={this.state.employee.position}
                     />
                 </Modal>
-                <Modal show={this.state.editingShift} modalClosed={this.cancelEditingShiftHandler}>
+                <Modal show={this.state.creatingShift} modalClosed={this.cancelCreatingShiftHandler}>
                     <ShiftInputForm
                         onTextInputChange={this.textShiftInputChangeHandler}
                         onSaveShift={this.saveShiftHandler}
                         dateLabel={this.state.shift.dateLabel}
-                        employee={this.state.shift.employee}
+                        employees={this.state.shift.employees}
+                    />
+                </Modal>
+                <Modal show={this.state.editingShift} modalClosed={this.cancelEditingShiftHandler}>
+                    <EditShift
+                        shift={this.state.shift}
+                        employees={this.props.employees}
+                        dialogIsOpen={this.state.editingShift}
+                        closeDialog={this.cancelEditingShiftHandler}
                     />
                 </Modal>
             </div>
@@ -248,7 +269,8 @@ class ScheduleControler extends Component {
 
 const mapStateToProps = state => {
     return {
-        employees: state.employees.employees
+        employees: state.employees.employees,
+        shifts: state.shifts.shifts
     };
 };
 

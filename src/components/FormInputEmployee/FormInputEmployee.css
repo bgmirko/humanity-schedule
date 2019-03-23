@@ -11,7 +11,18 @@
 .FormInputEmployee input{
     display: block;
     margin: 0 auto;
+    box-sizing: border-box;
     height: 35px;
+    width: 250px; 
+    padding-left: 10px;
+    margin-bottom: 15px;
+}
+
+.FormInputEmployee select{
+    display: block;
+    margin: 0 auto;
+    height: 35px;
+    box-sizing: border-box;
     width: 250px; 
     padding-left: 10px;
     margin-bottom: 15px;
@@ -31,4 +42,8 @@
 .FormInputEmployee button:hover{
     background-color: #237a23;
     box-shadow: 1px 3px 4px rgb(172, 172, 172);
+}
+
+.Hidden{
+    display: none !important;
 }

@@ -5,10 +5,10 @@ import * as actionTypes from './actionTypes';
 export const saveShift = (data) => {
     return dispatch => {
         const proxy = 'https://cors-anywhere.herokuapp.com/';
-        const address = 'https://humanity-schedule.firebaseio.com/shift.json';
+        const address = 'https://humanity-schedule.firebaseio.com/shifts.json';
         axios.post(`${proxy}${address}`, data)
         .then(res => {
-            console.log(res);
+            dispatch(getShifts());
         })
         .catch(err => {
             console.log(err);
@@ -19,10 +19,17 @@ export const saveShift = (data) => {
 export const getShifts = () => {
     return dispatch => {
         const proxy = 'https://cors-anywhere.herokuapp.com/';
-        const address = 'https://humanity-schedule.firebaseio.com/shift.json';
+        const address = 'https://humanity-schedule.firebaseio.com/shifts.json';
         axios.get(`${proxy}${address}`)
         .then(res => {
-            dispatch(saveShifts(res.data));
+            const fetchShifts = [];
+            for(let key in res.data){
+                fetchShifts.push({
+                    ...res.data[key],
+                    id: key
+                });
+            }
+            dispatch(storeShifts(fetchShifts));
         })
         .catch(err => {
             console.log(err);
@@ -30,12 +37,25 @@ export const getShifts = () => {
     }
 }
 
-export const saveShifts = (shifts) => {
+export const storeShifts = (shifts) => {
     return{
-        type: actionTypes.SAVE_SHIFTS,
+        type: actionTypes.STORE_SHIFTS,
         shifts: shifts
     }
 }
 
+export const editShift = (id, employees) => {
+    return dispatch => {
+        const proxy = 'https://cors-anywhere.herokuapp.com/';
+        const address = `https://humanity-schedule.firebaseio.com/shifts/${id}/employees.json`;
+        axios.put(`${proxy}${address}`, employees)
+        .then(res => {
+            dispatch(getShifts());
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    }
+}
 
 

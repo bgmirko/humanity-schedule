@@ -6,4 +6,5 @@ export const EDIT_EMPLOYEE = 'EDIT_EMPLOYEE';
 
 export const SAVE_SHIFT = 'SAVE_ShIFT';
 export const GET_SHIFTS = 'GET_SHIFTS';
-export const SAVE_SHIFTS = 'SAVE_SHIFTS';
+export const STORE_SHIFTS = 'STORE_SHIFTS';
+export const EDIT_SHIFT = 'EDIT_SHIFT';

@@ -1,0 +1,12 @@
+.EditShift{
+    display: flex;
+    flex-direction: column; 
+}
+
+.EditShift label{
+    display: block;
+}
+
+.EditShift ul{
+    list-style-type: none;
+}
