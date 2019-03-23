@@ -6,8 +6,6 @@ import classes from './Td.css';
 
 export const Td = (props) => {
 
-    console.log(props);
-
     // 2019/3/20
     const date = `${props.date.getYear() + 1900}/${props.date.getMonth() + 1}/${props.date.getDate()}`;
 

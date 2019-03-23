@@ -1,12 +1,12 @@
-.EditShift{
+.ShiftsControler{
     display: flex;
     flex-direction: column; 
 }
 
-.EditShift label{
+.ShiftsControler label{
     display: block;
 }
 
-.EditShift ul{
+.ShiftsControler ul{
     list-style-type: none;
 }

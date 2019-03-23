@@ -58,4 +58,18 @@ export const editShift = (id, employees) => {
     }
 }
 
+export const deleteShift = (id) => {
+    console.log(id);
+    return dispatch => {
+        const proxy = 'https://cors-anywhere.herokuapp.com/';
+        const address = `https://humanity-schedule.firebaseio.com/shifts/${id}.json`;
+        axios.delete(`${proxy}${address}`)
+        .then(res => {
+            dispatch(getShifts());
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    }
+}
 

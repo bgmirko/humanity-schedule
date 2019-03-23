@@ -8,3 +8,4 @@ export const SAVE_SHIFT = 'SAVE_ShIFT';
 export const GET_SHIFTS = 'GET_SHIFTS';
 export const STORE_SHIFTS = 'STORE_SHIFTS';
 export const EDIT_SHIFT = 'EDIT_SHIFT';
+export const DELETE_SHIFT = 'DELETE_SHIFT';
