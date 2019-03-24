@@ -29,8 +29,13 @@ class ScheduleControler extends Component {
     }
 
     componentDidMount() {
-        this.props.onGetEmployees();
-        this.props.onGetShifts();
+        if(this.props.employees.length === 0){
+            this.props.onGetEmployees();
+        }
+        if(this.props.shifts.length === 0){
+            this.props.onGetShifts();
+        }
+       
     }
 
     newEmployeeHandler = () => {
