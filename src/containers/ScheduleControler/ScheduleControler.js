@@ -98,6 +98,23 @@ class ScheduleControler extends Component {
                     ));
                 }
 
+                let bottomRow = [];
+
+                for (let i = 0; i <= 6; i++) {
+                    bottomRow.push((
+                        <TableCell key={`${i}${id}`}
+                            date={this.props.daysInWeek[i].date}
+                            dateLabel={null}
+                            shift={null}
+                            employeeId={null}
+                            // click={(id, date, dateLabel) => this.createShift(id, date, dateLabel)}
+                            // editShift={(shift) => this.editShift(shift)}
+                            >
+                        </TableCell>
+                    ));
+                }
+
+
                 return (
                     <tr key={id}>
                         <td className={classes.EmployeeCell}><Employee
@@ -111,6 +128,19 @@ class ScheduleControler extends Component {
                         {rowCells}
                     </tr>
                 );
+            });
+        }
+
+        let endRow = [];
+        const today = new Date();
+        if(this.props.daysInWeek.length > 0){
+            endRow = this.props.daysInWeek.map(el => {
+                let inputDate = new Date(el['date']);
+                if(inputDate.setHours(0,0,0,0) === today.setHours(0,0,0,0)){
+                    return (<td key={el['date']} className={classes.TableCellToday}></td>)
+                }else{
+                    return (<td key={el['date']}></td>)
+                }
             });
         }
 
@@ -133,13 +163,7 @@ class ScheduleControler extends Component {
                         {employeesTableRows}
                         <tr>
                             <td><button onClick={this.newEmployeeHandler}>Add Employee</button></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            {endRow}
                         </tr>
                     </tbody>
                 </table>

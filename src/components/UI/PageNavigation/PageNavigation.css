@@ -2,7 +2,7 @@
     display: flex;
     justify-content: center;
     height: 50px;
-    background-color: #bcdbff;
+    background-color: #fdb869;
 }
 
 .PageNavigation nav{
@@ -23,7 +23,7 @@
 
     display: flex;
     align-items: center;
-    background-color: #d3f8ec;
+    background-color: #f7ff8b;
     margin: 0;
     padding: 0;
 }
@@ -40,17 +40,17 @@
     font-size: 18px;
     font-weight: 550;
     color: #858585;
-    border-bottom: 2px solid rgb(121, 121, 121);
+    border-bottom: 2px solid rgb(192, 192, 192);
 }
 
 .PageNavigation a:hover{
-    background-color: rgb(255, 232, 189);
+    background-color: rgb(255, 212, 144);
     border-bottom: 2px solid rgb(161, 161, 161);
-    color: rgb(189, 104, 48);
+    color: rgb(189, 104, 48) !important;
 }
 
 .Active{
-    background-color: #73a0e9;
-    color: #e6d473 !important;
-    border-bottom: 2px solid rgb(114, 114, 114);
+    background-color: #f1e375;
+    color: #f1a312 !important;
+    border-bottom: 2px solid rgb(85, 85, 85) !important;
 }

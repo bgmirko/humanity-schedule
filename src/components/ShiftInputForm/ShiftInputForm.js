@@ -38,7 +38,6 @@ const ShiftInputEmployee = (props) => {
                         onChange={props.onTimeInputChange}>
                     </input>
                     <select name="startTimeAmPm"
-                        onChange={(event) => this.handleChange(event)}
                         defaultValue="am">
                         <option value="am">AM</option>
                         <option value="pm">PM</option>
@@ -50,7 +49,6 @@ const ShiftInputEmployee = (props) => {
                         onChange={props.onTimeInputChange}>
                     </input>
                     <select name="endTimeAmPm"
-                        onChange={(event) => this.handleChange(event)}
                         defaultValue="pm">
                         <option value="am">AM</option>
                         <option value="pm">PM</option>

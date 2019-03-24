@@ -15,8 +15,16 @@ export const TableCell = (props) => {
         employee = props.shift.employees.find(el => el.id === props.employeeId);
     }
 
+    let inputDate = new Date(props.date);
+    let todayDate = new Date();
+    let today = false;
+
+    if(inputDate.setHours(0,0,0,0) === todayDate.setHours(0,0,0,0)){
+        today = true;
+    }
+
     return (
-        <td className={classes.TableCell}
+        <td className={today ? classes.TableCellToday : classes.TableCell}
             onClick={() => { if (!props.shift) props.click(props.employeeId, date, props.dateLabel) }}>
             {
                 props.shift ?

@@ -1,7 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 
-import * as actions from '../../store/actions'
+import * as actions from '../../store/actions';
+
+import classes from './TableHeaderCalendar.css';
 
 
 class TableHeaderCalendar extends Component {
@@ -66,10 +68,17 @@ class TableHeaderCalendar extends Component {
         let tableHeader = [];
 
         if (this.state.daysInWeek.length > 0) {
+            const todayDate = new Date();
             tableHeader = this.state.daysInWeek.map(el => {
-                return (<th key={el.date} >{el.label}</th>);
+                let today = false;
+                const inputDate = new Date(el.date);
+                if(inputDate.setHours(0,0,0,0) === todayDate.setHours(0,0,0,0)){
+                    today = true;
+                }
+                return (<th key={el.date} className={today ? classes.TableCellToday : classes.TableCell}>{el.label}</th>);
             });
-            tableHeader.unshift((<th key="0">{`${this.state.daysInWeek[0].label} - ${this.state.daysInWeek[6].label}`}</th>))
+            tableHeader.unshift((<th key="0" className={classes.TableCell}>
+                    {`${this.state.daysInWeek[0].label} - ${this.state.daysInWeek[6].label}`}</th>))
         }
 
         return (

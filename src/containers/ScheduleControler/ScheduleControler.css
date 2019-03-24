@@ -1,5 +1,5 @@
 .ScheduleControler{
-    padding-top: 100px;
+    padding-top: 50px;
 }
 
 .ScheduleControler table{
@@ -52,4 +52,8 @@
 
 .Right{
     margin-left: 130px;
+}
+
+.TableCellToday{
+    background-color: rgb(195, 255, 255);
 }

@@ -1,0 +1,13 @@
+.TableHeaderCalendar th{
+    padding: 3px;
+    width: 135px;
+    height: 65px;
+}
+
+.TableCell{
+    background-color: rgba(221, 221, 221, 0.692);
+}
+
+.TableCellToday{
+    background-color: rgb(195, 255, 255);
+}
