@@ -16,7 +16,6 @@ import classes from './ScheduleControler.css';
 class ScheduleControler extends Component {
 
     state = {
-        // daysInWeek: [],
         shift: {
             shiftName: "",
             date: "",
@@ -24,7 +23,7 @@ class ScheduleControler extends Component {
             dateLabel: "",
             employees: []
         },
-        shiftsOperation: "no", // no, edit, create
+        shiftsOperation: "no", // no, create, edit 
         employeesOperation: "no", // no, new, edit
         modalIsOpen: false
     }
@@ -38,17 +37,17 @@ class ScheduleControler extends Component {
         this.setState({ employeesOperation: "new", modalIsOpen: true });
     }
 
-    cancelEditingEmployeesHandler = () => {
-        this.setState({ employeesOperation: "no", modalIsOpen: false})
+    editEmployeeHandler = (empl) => {
+        this.refs.employeesControler.editEmployeeHandler(empl);
+        this.setState({ employeesOperation: "edit" });
     }
 
     deleteEmployeeHandler = (id) => {
         this.refs.employeesControler.deleteEmployeeHandler(id);
     }
 
-    editEmployeeHandler = (empl) => {
-        this.refs.employeesControler.editEmployeeHandler(empl);
-        this.setState({ employeesOperation: "edit" });
+    cancelEditingEmployeesHandler = () => {
+        this.setState({ employeesOperation: "no", modalIsOpen: false})
     }
 
     createShift = (userId, date, dateLabel) => {
@@ -72,25 +71,29 @@ class ScheduleControler extends Component {
     render() {
 
         let employeesTableRows = [];
+
         if (this.props.employees.length > 0 && this.props.daysInWeek.length > 0) {
+
             employeesTableRows = this.props.employees.map(el => {
                 const id = el.id;
                 let rowCells = [];
+
                 for (let i = 0; i <= 6; i++) {
                     const dataLabel = this.props.daysInWeek[i].label;
                     rowCells.push((
                         <Td key={`${i}${id}`}
-                            userId={id}
+                            userId={id}             // proveri ovo treba da se brise!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
                             date={this.props.daysInWeek[i].date}
                             dateLabel={dataLabel}
-                            shift={this.props.shifts.find(el => (el.dateLabel === dataLabel
-                                && el.employees.find(employee => { return employee.id === id })))}
+                            shift={this.props.shifts.find(el => (el.dateLabel === dataLabel && 
+                                    el.employees.find(employee => { return employee.id === id })))}
                             employeeId={id}
                             click={(userId, date, dateLabel) => this.createShift(userId, date, dateLabel)}
                             editShift={(shift) => this.editShift(shift)}>
                         </Td>
                     ));
                 }
+
                 return (
                     <tr key={id}>
                         <td><Employee
@@ -146,10 +149,9 @@ class ScheduleControler extends Component {
                     <ShiftsControler
                         shiftsOperation={this.state.shiftsOperation}
                         shift={this.state.shift}
-                        employees={this.props.employees} // this is all employees not only employees in that shift
+                        employees={this.props.employees}
                         modalIsOpen={this.state.modalIsOpen}
                         closeDialog={this.cancelEditingShiftHandler}
-
                     />
                 </Modal>
             </div>

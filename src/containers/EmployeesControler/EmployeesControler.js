@@ -20,16 +20,20 @@ class EmployeesControler extends Component {
     }
 
     componentDidUpdate(){
+
         if(this.props.employeesOperation === "new" && this.state.resetEmployeeData){
             const employee = {employeeId: null, firstName: "", lastName: "", avatarUrl: "", position: ""}
             this.setState({employee: employee, resetEmployeeData: false})
         }
+
         if(!this.props.modalIsOpen && !this.state.resetEmployeeData){
             this.setState({resetEmployeeData: true});
         }
+
     }
 
     saveEmployeeHandler = (event) => {
+
         event.preventDefault();
         const { firstName, lastName, avatarUrl, employeeId } = this.state.employee;
         const data = {
@@ -38,11 +42,13 @@ class EmployeesControler extends Component {
             avatarUrl: avatarUrl,
             position: event.target.position.value,
         }
+
         if (this.props.employeesOperation === "new") {
             this.props.onAddEmployee(data);
         } else if (this.props.employeesOperation === "edit") {
             this.props.onEditEmployee(employeeId, data);
         }
+        
         const employee = { employeeId: null, firstName: "", lastName: "", avatarUrl: "", position: "" }
         event.target.jobPosition.value = "intro";
         this.props.closeDialog();

@@ -21,7 +21,6 @@ class FormInputEmployee extends Component{
             this.inputPosition.value = this.props.position;
         }
 
-
         return (
             <div className={classes.FormInputEmployee}>
                 <form onSubmit={this.props.onSaveEmployee}>
@@ -57,7 +56,6 @@ class FormInputEmployee extends Component{
             </div>
         )
     }
-
 
 }
 

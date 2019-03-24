@@ -1,8 +1,7 @@
 import React from 'react';
 
-
-
 import classes from './Employee.css';
+
 
 const Employee = (props) => {
 

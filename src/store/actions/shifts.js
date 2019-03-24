@@ -7,12 +7,12 @@ export const saveShift = (data) => {
         const proxy = 'https://cors-anywhere.herokuapp.com/';
         const address = 'https://humanity-schedule.firebaseio.com/shifts.json';
         axios.post(`${proxy}${address}`, data)
-        .then(res => {
-            dispatch(getShifts());
-        })
-        .catch(err => {
-            console.log(err);
-        })
+            .then(res => {
+                dispatch(getShifts());
+            })
+            .catch(err => {
+                console.log(err);
+            })
     }
 }
 
@@ -21,24 +21,24 @@ export const getShifts = () => {
         const proxy = 'https://cors-anywhere.herokuapp.com/';
         const address = 'https://humanity-schedule.firebaseio.com/shifts.json';
         axios.get(`${proxy}${address}`)
-        .then(res => {
-            const fetchShifts = [];
-            for(let key in res.data){
-                fetchShifts.push({
-                    ...res.data[key],
-                    id: key
-                });
-            }
-            dispatch(storeShifts(fetchShifts));
-        })
-        .catch(err => {
-            console.log(err);
-        })
+            .then(res => {
+                const fetchShifts = [];
+                for (let key in res.data) {
+                    fetchShifts.push({
+                        ...res.data[key],
+                        id: key
+                    });
+                }
+                dispatch(storeShifts(fetchShifts));
+            })
+            .catch(err => {
+                console.log(err);
+            })
     }
 }
 
 export const storeShifts = (shifts) => {
-    return{
+    return {
         type: actionTypes.STORE_SHIFTS,
         shifts: shifts
     }
@@ -49,12 +49,12 @@ export const editShift = (id, employees) => {
         const proxy = 'https://cors-anywhere.herokuapp.com/';
         const address = `https://humanity-schedule.firebaseio.com/shifts/${id}/employees.json`;
         axios.put(`${proxy}${address}`, employees)
-        .then(res => {
-            dispatch(getShifts());
-        })
-        .catch(err => {
-            console.log(err);
-        })
+            .then(res => {
+                dispatch(getShifts());
+            })
+            .catch(err => {
+                console.log(err);
+            })
     }
 }
 
@@ -64,12 +64,12 @@ export const deleteShift = (id) => {
         const proxy = 'https://cors-anywhere.herokuapp.com/';
         const address = `https://humanity-schedule.firebaseio.com/shifts/${id}.json`;
         axios.delete(`${proxy}${address}`)
-        .then(res => {
-            dispatch(getShifts());
-        })
-        .catch(err => {
-            console.log(err);
-        })
+            .then(res => {
+                dispatch(getShifts());
+            })
+            .catch(err => {
+                console.log(err);
+            })
     }
 }
 

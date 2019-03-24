@@ -25,7 +25,7 @@ export const getEmployees = () => {
         const proxy = 'https://cors-anywhere.herokuapp.com/';
         const address = 'https://humanity-schedule.firebaseio.com/employees.json';
         axios.get(`${proxy}${address}`)
-            .then(response => {
+            .then(response => {       
                 const fetchEmployees = [];
                 for (let key in response.data) {
                     fetchEmployees.push({

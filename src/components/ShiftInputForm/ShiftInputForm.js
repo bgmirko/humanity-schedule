@@ -3,8 +3,10 @@ import React from 'react';
 import classes from './ShiftInputForm.css';
 
 const ShiftInputEmployee = (props) => {
+
         const employee = props.employees[0];
-        let employeName = ""
+        let employeName = "";
+        
         if(typeof employee !== 'undefined'){
             employeName = `${employee['firstName']} ${employee['lastName']}`
         }

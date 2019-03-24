@@ -16,9 +16,7 @@ const modal = (props) => (
             }}>
             {props.children}
         </div>
-
     </Fragment>
-
 );
 
 export default modal

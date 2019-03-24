@@ -24,10 +24,10 @@ class ShiftsControler extends Component {
     }
 
     componentDidUpdate() {
+
         if (this.props.shiftsOperation === "editing" && this.state.openForData) {
             let sheduledEmployees = [];
             let unsheduledEmployees = [];
-
             if (this.props.shift.employees.length > 0) {
                 for (let i = 0; i < this.props.employees.length; i++) {
                     const id = (this.props.employees[i]['id']);
@@ -80,6 +80,7 @@ class ShiftsControler extends Component {
     sheduleEmployee = (id) => {
         const unsheduledEmployees = this.state.unsheduledEmployees;
         const sheduledEmployees = this.state.sheduledEmployees;
+
         for (let key in unsheduledEmployees) {
             if (unsheduledEmployees[key].id === id) {
                 let employee = JSON.parse(JSON.stringify(unsheduledEmployees[key]));
@@ -87,12 +88,14 @@ class ShiftsControler extends Component {
                 unsheduledEmployees.splice(key, 1);
             }
         }
+
         this.setState({ unsheduledEmployees: unsheduledEmployees, sheduledEmployees: sheduledEmployees });
     }
 
     unSheduleEmployee = (id) => {
         const unsheduledEmployees = this.state.unsheduledEmployees;
         const sheduledEmployees = this.state.sheduledEmployees;
+
         for (let key in sheduledEmployees) {
             if (sheduledEmployees[key].id === id) {
                 let employee = JSON.parse(JSON.stringify(sheduledEmployees[key]));
@@ -100,6 +103,7 @@ class ShiftsControler extends Component {
                 sheduledEmployees.splice(key, 1);
             }
         }
+
         this.setState({ unsheduledEmployees: unsheduledEmployees, sheduledEmployees: sheduledEmployees });
     }
 
@@ -130,7 +134,7 @@ class ShiftsControler extends Component {
         });
 
         switch (this.props.shiftsOperation) {
-            case "creating":
+            case "creat":
                 return (
                     <ShiftInputForm
                         onTextInputChange={this.textInputChangeHandler}
@@ -139,7 +143,7 @@ class ShiftsControler extends Component {
                         employees={this.props.shift.employees}
                     />
                 );
-            case "editing":
+            case "edit":
                 return (
                     <div className={classes.ShiftsControler}>
                         <label>{this.props.shift.shiftName}</label>
