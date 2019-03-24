@@ -3,7 +3,6 @@ import React from 'react';
 import positions from '../Positions/Positions';
 import classes from './Shift.css';
 
-
 const Shift = (props) => {
 
     const { color } = positions.find(jobPosition => {

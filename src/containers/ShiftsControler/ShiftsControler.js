@@ -112,7 +112,6 @@ class ShiftsControler extends Component {
                 sheduledEmployees.splice(key, 1);
             }
         }
-
         this.setState({ unsheduledEmployees: unsheduledEmployees, sheduledEmployees: sheduledEmployees });
     }
 

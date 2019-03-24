@@ -35,7 +35,6 @@ class ScheduleControler extends Component {
         if(this.props.shifts.length === 0){
             this.props.onGetShifts();
         }
-       
     }
 
     newEmployeeHandler = () => {
@@ -99,17 +98,13 @@ class ScheduleControler extends Component {
                 }
 
                 let bottomRow = [];
-
                 for (let i = 0; i <= 6; i++) {
                     bottomRow.push((
                         <TableCell key={`${i}${id}`}
                             date={this.props.daysInWeek[i].date}
                             dateLabel={null}
                             shift={null}
-                            employeeId={null}
-                            // click={(id, date, dateLabel) => this.createShift(id, date, dateLabel)}
-                            // editShift={(shift) => this.editShift(shift)}
-                            >
+                            employeeId={null}>
                         </TableCell>
                     ));
                 }
