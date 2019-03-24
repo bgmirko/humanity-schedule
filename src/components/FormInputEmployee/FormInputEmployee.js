@@ -6,10 +6,6 @@ import classes from './FormInputEmployee.css';
 
 class FormInputEmployee extends Component{
 
-    handleChange = (event) => {
-        this.inputPosition.value = event.target.value;
-    }
-
     render(props) {
 
         const options = positions.map(el => { return (<option value={el.name} key={el.name}>{el.name}</option>) });
@@ -17,13 +13,20 @@ class FormInputEmployee extends Component{
                                 value={this.props.position ? this.props.position : "intro"}>
                                 {this.props.position ? this.props.position : 'Job Position'}</option>));
 
-        if(this.props.position && this.inputPosition.value === ""){
-            this.inputPosition.value = this.props.position;
+        if(this.props.position){
+            this.refs.jobPosition.value = this.props.position;
+        }
+
+        let errorMessage = "";
+        if(this.props.errorMessage){
+            let iterator = 0;
+            errorMessage = this.props.errorMessage.map(el => <p key={iterator++}>{el}</p>)
         }
 
         return (
             <div className={classes.FormInputEmployee}>
-                <form onSubmit={this.props.onSaveEmployee}>
+                <div className={this.props.errorMessage.length > 0 ? classes.Error_Message : classes.Hidden}>{errorMessage}</div>
+                <form onSubmit={(e) => this.props.onSaveEmployee(e)}>
                     <input
                         type="text"
                         placeholder="First Name"
@@ -39,18 +42,17 @@ class FormInputEmployee extends Component{
                         onChange={this.props.onTextInputChange}>
                     </input>
                     <input
-                        type="text"
+                        type="url"
                         placeholder="Url of Avatar image"
                         name="avatarUrl"
                         value={this.props.avatarUrl}
                         onChange={this.props.onTextInputChange}>
                     </input>
                     <select name="jobPosition"
-                        onChange={(event) => this.handleChange(event)}
+                        ref="jobPosition"
                         defaultValue="intro">
                         {options}
                     </select>
-                    <input className={classes.Hidden} type="text" name="position" ref={node => { this.inputPosition = node }} />
                     <button type="submit">Save Employee</button>
                 </form>
             </div>

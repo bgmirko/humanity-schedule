@@ -47,3 +47,22 @@
 .Hidden{
     display: none !important;
 }
+
+.Error_Message{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0 auto;
+    width: 250px;
+    height: 90px;
+    margin-bottom: 15px;
+    background-color: #ffd4d4;
+    color: #ca2d2d;
+    text-align: center;
+}
+
+.FormInputEmployee p{
+    font-size: 14px;
+    margin: 0;
+    padding: 0;
+} 

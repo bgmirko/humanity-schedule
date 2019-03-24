@@ -9,10 +9,10 @@
 .ShiftInputForm input{
     display: block;
     margin: 0 auto;
-    height: 35px;
+    height: 30px;
     width: 250px; 
     padding-left: 10px;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .ShiftInputForm label{
@@ -35,3 +35,55 @@
     background-color: #237a23;
     box-shadow: 1px 3px 4px rgb(172, 172, 172);
 }
+
+.Date_Label{
+    font-size: 20px;
+    margin: 0 0 10px 0 !important;
+    padding: 0;
+}
+
+.Employe_Name{
+    padding-left: 5px;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.Time_Container{
+    display: flex;
+    justify-content: center;;
+}
+
+.Time_Container input{
+    width: 45px;
+    height: 30px;
+    margin: 0 5px 0 5px;;
+    padding: 0;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.Time_Container select{
+    height: 30px;
+    width: 45px;;
+}
+
+.Hidden{
+    display: none !important;
+}
+
+.Error_Message{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin: 0 auto;
+    width: 250px;
+    height: 80px;
+    margin-bottom: 15px;
+    background-color: #ffd4d4;
+    color: #ca2d2d;
+}
+
+.ShiftInputForm p{
+    margin: 0;
+    padding: 0;
+} 

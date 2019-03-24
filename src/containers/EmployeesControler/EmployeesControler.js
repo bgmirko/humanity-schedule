@@ -17,6 +17,7 @@ class EmployeesControler extends Component {
             position: ""
         },
         resetEmployeeData: true,
+        errorMessage: []
     }
 
     componentDidUpdate(){
@@ -30,17 +31,19 @@ class EmployeesControler extends Component {
             this.setState({resetEmployeeData: true});
         }
 
+        if (!this.props.modalIsOpen && this.state.errorMessage.length > 0) {
+            this.setState({ errorMessage: []});
+        }
+
     }
 
-    saveEmployeeHandler = (event) => {
-
-        event.preventDefault();
+    saveEmployeeHandler = (position) => {
         const { firstName, lastName, avatarUrl, employeeId } = this.state.employee;
         const data = {
             firstName: firstName,
             lastName: lastName,
             avatarUrl: avatarUrl,
-            position: event.target.position.value,
+            position: position,
         }
 
         if (this.props.employeesOperation === "new") {
@@ -50,9 +53,8 @@ class EmployeesControler extends Component {
         }
         
         const employee = { employeeId: null, firstName: "", lastName: "", avatarUrl: "", position: "" }
-        event.target.jobPosition.value = "intro";
         this.props.closeDialog();
-        this.setState({ employee: employee });
+        this.setState({ employee: employee, errorMessage: []});
     }
 
     editEmployeeHandler = (empl) => {
@@ -76,16 +78,41 @@ class EmployeesControler extends Component {
         })
     }
 
+    verifyInputData = (e) => {
+        e.preventDefault();
+        const position = e.target.jobPosition.value;
+        let errorMsg = [];
+        if(e.target.firstName.value === ""){
+            errorMsg.push("Shift name is not defined");
+        }
+        if(e.target.lastName.value === ""){
+            errorMsg.push("Last name is not defined");
+        }
+        if(e.target.avatarUrl.value === ""){
+            errorMsg.push("Image url is not defined");
+        }
+        if(position === "intro"){
+            errorMsg.push("Job position is not defined");
+        }
+        if(errorMsg.length > 0){
+            this.setState({errorMessage: errorMsg});
+        }else{
+            e.target.jobPosition.value = "intro";
+            this.saveEmployeeHandler(position);
+        }
+    }
+
     render() {
 
         return (
             <FormInputEmployee
                 onTextInputChange={this.textInputChangeHandler}
-                onSaveEmployee={this.saveEmployeeHandler}
+                onSaveEmployee={(e) => this.verifyInputData(e)}
                 firstName={this.state.employee.firstName}
                 lastName={this.state.employee.lastName}
                 avatarUrl={this.state.employee.avatarUrl}
                 position={this.state.employee.position}
+                errorMessage={this.state.errorMessage}
             />
         )
     }

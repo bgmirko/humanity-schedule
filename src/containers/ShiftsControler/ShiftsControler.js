@@ -21,11 +21,14 @@ class ShiftsControler extends Component {
         sheduledEmployees: [],
         unsheduledEmployees: [],
         openForData: true,
+        startTime: "",
+        endTime: "",
+        errorMessage: []
     }
 
     componentDidUpdate() {
 
-        if (this.props.shiftsOperation === "editing" && this.state.openForData) {
+        if (this.props.shiftsOperation === "edit" && this.state.openForData) {
             let sheduledEmployees = [];
             let unsheduledEmployees = [];
             if (this.props.shift.employees.length > 0) {
@@ -41,8 +44,11 @@ class ShiftsControler extends Component {
             }
         }
 
-        if(!this.props.modalIsOpen && !this.state.openForData){
-            this.setState({openForData: true});
+        if (!this.props.modalIsOpen && !this.state.openForData) {
+            this.setState({ openForData: true});
+        }
+        if (!this.props.modalIsOpen && this.state.errorMessage.length > 0) {
+            this.setState({ errorMessage: []});
         }
     }
 
@@ -52,14 +58,17 @@ class ShiftsControler extends Component {
         })
     }
 
-    saveNewShiftHandler = (event, date, dateLabel, employees) => {
-        event.preventDefault();
+    timeInputChange = (event) => {
+        this.setState({ [event.target.name]: event.target.value })
+    }
+
+    saveNewShiftHandler = (time) => {
         const data = {
-            shiftName: event.target.shiftName.value,
-            date: date,
-            dateLabel: dateLabel,
-            time: event.target.time.value,
-            employees: employees
+            shiftName: this.state.shift.shiftName,
+            date: this.props.shift.date,
+            dateLabel: this.props.shift.dateLabel,
+            time: time,
+            employees: this.props.shift.employees
         }
         this.props.onSaveShift(data);
         this.props.closeDialog();
@@ -107,6 +116,28 @@ class ShiftsControler extends Component {
         this.setState({ unsheduledEmployees: unsheduledEmployees, sheduledEmployees: sheduledEmployees });
     }
 
+    validateInputData = (event) => {
+        event.preventDefault();
+        let errorMsg = [];
+        if (!this.state.shift.shiftName) {
+            errorMsg.push("Shift name is not defined");
+        }
+        if (!this.state.startTime || !this.state.endTime) {
+            errorMsg.push("Time is not defined");
+        }
+        if (errorMsg.length > 0) {
+            this.setState({ errorMessage: errorMsg });
+        } else {
+            const time = `${this.state.startTime}${event.target.startTimeAmPm.value} - ${this.state.endTime}${event.target.endTimeAmPm.value}`;
+            this.saveNewShiftHandler(time)
+            const shift = {
+                ...this.state.shift,
+                shiftName: ""
+            }
+            this.setState({ errorMessage: [], shift: shift, startTime: "", endTime: "" });
+        }
+    }
+
 
     render() {
 
@@ -134,11 +165,13 @@ class ShiftsControler extends Component {
         });
 
         switch (this.props.shiftsOperation) {
-            case "creat":
+            case "create":
                 return (
                     <ShiftInputForm
                         onTextInputChange={this.textInputChangeHandler}
-                        onSaveShift={(event) => this.saveNewShiftHandler(event, this.props.shift.date, this.props.shift.dateLabel, this.props.shift.employees)}
+                        onTimeInputChange={this.timeInputChange}
+                        errorMessage={this.state.errorMessage}
+                        submit={(e) => this.validateInputData(e)}
                         dateLabel={this.props.shift.dateLabel}
                         employees={this.props.shift.employees}
                     />
@@ -146,20 +179,33 @@ class ShiftsControler extends Component {
             case "edit":
                 return (
                     <div className={classes.ShiftsControler}>
-                        <label>{this.props.shift.shiftName}</label>
-                        <label>{this.props.shift.dateLabel}</label>
-                        <label>{this.props.shift.time}</label>
-                        <label>Working in this shift:</label>
-                        <ul>
-                            {sheduled}
-                        </ul>
-                        <hr></hr>
-                        <label>Add worker to shift:</label>
-                        <ul>
-                            {notSheduled}
-                        </ul>
-                        <button onClick={this.deleteShiftHandler}>Delete</button>
-                        <button onClick={this.saveEditShiftHandler}>Save</button>
+                        <h3>{this.props.shift.shiftName}</h3>
+                        <div className={classes.Date}>
+                            <label>{this.props.shift.dateLabel}</label>
+                            <label>{this.props.shift.time}</label>
+                        </div>
+                        <div className={classes.Workers_Container}>
+                            <div>
+                                <label>Working in this shift:</label>
+                                <ul>
+                                    {sheduled}
+                                </ul>
+                            </div>
+                            <div>
+                                <label>Add worker to shift:</label>
+                                <ul>
+                                    {notSheduled}
+                                </ul>
+                            </div>
+                        </div>
+                        <div className={classes.Buttons_Container}>
+                            <button
+                                className={classes.Delete_Button}
+                                onClick={this.deleteShiftHandler}>Delete</button>
+                            <button
+                                className={classes.Save_Button}
+                                onClick={this.saveEditShiftHandler}>Save</button>
+                        </div>
                     </div>
                 )
             default: return null;
@@ -172,7 +218,7 @@ const mapDispatchToProps = dispatch => {
     return {
         onSaveShift: (data) => dispatch(actions.saveShift(data)),
         onEditShift: (id, employees) => dispatch(actions.editShift(id, employees)),
-        onDeleteShift: (id) => dispatch(actions.deleteShift(id)) 
+        onDeleteShift: (id) => dispatch(actions.deleteShift(id))
     };
 };
 

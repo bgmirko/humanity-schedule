@@ -5,7 +5,7 @@ import * as actions from '../../store/actions/index';
 
 import Employee from '../../components/Employee/Employee';
 import Modal from '../../components/UI/Modal/Modal';
-import Td from '../../components/UI/Td/Td';
+import TableCell from '../../components/TableCell/TableCell';
 import TableHeaderCalendar from '../../components/TableHeaderCalendar/TableHeaderCalendar';
 import ShiftsControler from '../ShiftsControler/ShiftsControler';
 import EmployeesControler from '../EmployeesControler/EmployeesControler';
@@ -50,10 +50,10 @@ class ScheduleControler extends Component {
         this.setState({ employeesOperation: "no", modalIsOpen: false})
     }
 
-    createShift = (userId, date, dateLabel) => {
-        const employee = this.props.employees.find(el => el.id === userId);
+    createShift = (employeeId, date, dateLabel) => {
+        const employee = this.props.employees.find(el => el['id'] === employeeId);
         const shift = { date: date, dateLabel: dateLabel, employees: [employee] }
-        this.setState({ shiftsOperation: "create", shift: shift });
+        this.setState({ shiftsOperation: "create", shift: shift, modalIsOpen: true});
     }
 
     editShift = (shift) => {
@@ -81,22 +81,21 @@ class ScheduleControler extends Component {
                 for (let i = 0; i <= 6; i++) {
                     const dataLabel = this.props.daysInWeek[i].label;
                     rowCells.push((
-                        <Td key={`${i}${id}`}
-                            userId={id}             // proveri ovo treba da se brise!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
+                        <TableCell key={`${i}${id}`}
                             date={this.props.daysInWeek[i].date}
                             dateLabel={dataLabel}
                             shift={this.props.shifts.find(el => (el.dateLabel === dataLabel && 
                                     el.employees.find(employee => { return employee.id === id })))}
                             employeeId={id}
-                            click={(userId, date, dateLabel) => this.createShift(userId, date, dateLabel)}
+                            click={(id, date, dateLabel) => this.createShift(id, date, dateLabel)}
                             editShift={(shift) => this.editShift(shift)}>
-                        </Td>
+                        </TableCell>
                     ));
                 }
 
                 return (
                     <tr key={id}>
-                        <td><Employee
+                        <td className={classes.EmployeeCell}><Employee
                             firstName={el.firstName}
                             lastName={el.lastName}
                             position={el.position}
@@ -114,8 +113,10 @@ class ScheduleControler extends Component {
             <div className={classes.ScheduleControler}>
                 <div className={classes.Date_Buttons_Container}>
                     <button onClick={() => this.switchDates('backward')}
-                            disabled = {this.props.disableBackwardButton}>&#60;</button>
-                    <button onClick={() => this.switchDates('forward')}>&#62;</button>
+                            className = {this.props.disableBackwardButton ? classes.Disable : ""}
+                            style={{float: 'left'}}>&#60;</button>
+                    <button className = {this.props.disableBackwardButton ? classes.Right : ""} 
+                        onClick={() => this.switchDates('forward')}>&#62;</button>
                 </div>
                 <table>
                     <tbody>

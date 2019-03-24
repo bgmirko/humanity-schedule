@@ -38,6 +38,18 @@
     border-radius: 7px;
     font-size: 25px;
     padding-bottom: 5px;
-    color: red;
+    color: orange;
 }
 
+.EmployeeCell{
+    width: 240px;
+    height: 65px;
+}
+
+.Disable{
+    display: none !important;
+}
+
+.Right{
+    margin-left: 130px;
+}
